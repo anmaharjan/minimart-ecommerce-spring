@@ -22,4 +22,8 @@ public class PaymentStatus {
     @JsonView({View.OrderView.class, View.OrderAdminListView.class})
     @Column(name = "status")
     private String status;
+
+    public PaymentStatus(String status){
+        this.status = status;
+    }
 }

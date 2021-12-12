@@ -1,8 +1,10 @@
 package edu.miu.waa.minimartecommerce.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import edu.miu.waa.minimartecommerce.domain.user.PaymentDetail;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
+import edu.miu.waa.minimartecommerce.dto.user.PaymentDetailDto;
 import edu.miu.waa.minimartecommerce.dto.user.UserDto;
 import edu.miu.waa.minimartecommerce.service.user.IUserService;
 import edu.miu.waa.minimartecommerce.view.View;
@@ -51,5 +53,16 @@ public class UserController {
     public ResponseEntity<ResponseMessage> approveSeller(@PathVariable long id){
         ResponseMessage response = userService.approveSellers(id);
         return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+    @PostMapping("/payment-details")
+    public ResponseEntity<ResponseMessage> savePaymentDetail(@RequestBody PaymentDetailDto dto){
+        ResponseMessage response = userService.addPaymentDetail(dto);
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+    @GetMapping("/{userId}/payment-details")
+    public ResponseEntity<List<PaymentDetail>> findAllPaymentDetail(@PathVariable(name = "userId") long userId){
+        return ResponseEntity.ok(userService.getAllPaymentDetails(userId));
     }
 }

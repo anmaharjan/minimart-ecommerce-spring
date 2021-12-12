@@ -28,6 +28,4 @@ public class UserDto {
 
     @Valid
     private AddressDto billingAddress = null;
-    @Valid
-    private AddressDto shippingAddress = null;
 }

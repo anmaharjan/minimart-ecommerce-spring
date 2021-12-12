@@ -1,7 +1,9 @@
 package edu.miu.waa.minimartecommerce.service.user;
 
+import edu.miu.waa.minimartecommerce.domain.user.PaymentDetail;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
+import edu.miu.waa.minimartecommerce.dto.user.PaymentDetailDto;
 import edu.miu.waa.minimartecommerce.dto.user.UserDto;
 
 import java.util.List;
@@ -19,4 +21,8 @@ public interface IUserService {
     List<User> getAllUnapprovedSellers();
 
     ResponseMessage approveSellers(long id);
+
+    ResponseMessage addPaymentDetail(PaymentDetailDto dto);
+
+    List<PaymentDetail> getAllPaymentDetails(long userId);
 }

@@ -34,6 +34,9 @@ public class Review {
     @JsonView({View.CommentView.class})
     private Date updatedDate;
 
+    @Column(name = "admin_approved")
+    private boolean adminApproved;
+
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonView({View.CommentView.class})

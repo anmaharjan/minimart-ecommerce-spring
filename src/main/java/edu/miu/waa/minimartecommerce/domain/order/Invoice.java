@@ -2,7 +2,7 @@ package edu.miu.waa.minimartecommerce.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.miu.waa.minimartecommerce.domain.payment.Payment;
-import edu.miu.waa.minimartecommerce.domain.payment.PaymentMethod;
+import edu.miu.waa.minimartecommerce.domain.user.PaymentDetail;
 import edu.miu.waa.minimartecommerce.view.View;
 import lombok.*;
 
@@ -32,10 +32,10 @@ public class Invoice {
     @JsonView({View.OrderView.class, View.OrderAdminListView.class})
     private Payment payment;
 
-    @ManyToOne(targetEntity = PaymentMethod.class, cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_method_id")
-    @JsonView(View.OrderView.class)
-    private PaymentMethod paymentMethod;
+    @OneToOne(targetEntity = PaymentDetail.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_payment_detail_id")
+    @JsonView({View.OrderView.class, View.OrderAdminListView.class})
+    private PaymentDetail paymentDetail;
 
     @Column(name = "invoice_date")
     @JsonView(View.OrderView.class)

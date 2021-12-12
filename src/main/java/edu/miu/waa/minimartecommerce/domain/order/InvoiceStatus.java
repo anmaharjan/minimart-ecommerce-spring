@@ -23,4 +23,8 @@ public class InvoiceStatus {
     @Column(name = "status")
     @JsonView(View.OrderView.class)
     private String status;
+
+    public InvoiceStatus(String status){
+        this.status = status;
+    }
 }

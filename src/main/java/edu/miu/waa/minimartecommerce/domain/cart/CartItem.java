@@ -29,7 +29,6 @@ public class CartItem {
     @JsonView({View.CartView.class})
     private int quantity;
 
-    @JsonView({View.CartView.class})
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

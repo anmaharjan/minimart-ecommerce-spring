@@ -1,6 +1,7 @@
 package edu.miu.waa.minimartecommerce.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import edu.miu.waa.minimartecommerce.domain.user.ShippingAddress;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.view.View;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,12 @@ public class Orders {
     @ManyToOne(targetEntity = User.class, cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @JsonView(View.OrderView.class)
+    @OneToOne(targetEntity = ShippingAddress.class, cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_address_id")
+    private ShippingAddress shippingAddress;
 
     @JsonView({View.OrderView.class, View.OrderListView.class, View.OrderAdminListView.class})
     @ManyToOne(targetEntity = OrderStatus.class, cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)

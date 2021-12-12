@@ -2,6 +2,7 @@ package edu.miu.waa.minimartecommerce.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
+import edu.miu.waa.minimartecommerce.domain.order.OrderItem;
 import edu.miu.waa.minimartecommerce.view.View;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +12,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -70,10 +73,9 @@ public class User {
     @JoinColumn(name = "billing_address_id")
     private BillingAddress billingAddress;
 
-    // shipping address will be feasible for only order model
-    @OneToOne(targetEntity = ShippingAddress.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "shipping_address_id")
-    private ShippingAddress shippingAddress;
+    @OneToMany(targetEntity = PaymentDetail.class, cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "user")
+    private List<PaymentDetail> paymentDetails = new ArrayList<>();
 
     public User(String firstname, String middlename, String lastname, String username,
                 String password, Set<Role> roles){

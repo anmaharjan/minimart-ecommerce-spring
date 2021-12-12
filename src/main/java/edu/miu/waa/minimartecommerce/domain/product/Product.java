@@ -1,6 +1,7 @@
 package edu.miu.waa.minimartecommerce.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import edu.miu.waa.minimartecommerce.domain.cart.CartItem;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.view.View;
 import lombok.*;
@@ -22,15 +23,15 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({View.ProductView.class, View.ProductListView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
     private long id;
 
-    @JsonView({View.ProductView.class, View.ProductListView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
     private String name;
-    @JsonView({View.ProductView.class, View.ProductListView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
     @Column(name = "actual_price")
     private double actualPrice;
-    @JsonView({View.ProductView.class, View.ProductListView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
     @Column(name = "sale_price")
     private double salePrice = 0;
     @JsonView({View.ProductView.class, View.ProductListView.class})
@@ -45,14 +46,14 @@ public class Product {
     @JsonView({View.ProductView.class, View.ProductEditView.class})
     @Column(columnDefinition = "text")
     private String description = "";
-    @JsonView({View.ProductView.class, View.ProductEditView.class})
+    @JsonView({View.ProductView.class, View.ProductEditView.class, View.CartView.class})
     @Column(columnDefinition = "text")
     private String highlights = "";
 
-    @JsonView({View.ProductView.class})
+    @JsonView({View.ProductView.class, View.CartView.class})
     private int rating=1;
 
-    @JsonView({View.ProductView.class, View.ProductListView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
     @OneToMany(targetEntity = ProductImages.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     @Fetch(FetchMode.SELECT)
@@ -62,4 +63,8 @@ public class Product {
     @JoinColumn(name = "user_id")
     @Fetch(FetchMode.SELECT)
     private User user;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "product", fetch = FetchType.LAZY)
+    private List<CartItem> cartItems = new ArrayList<>();
+
 }
