@@ -56,7 +56,8 @@ public class JwtUtil {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
-    private String doGenerateToken(Map<String, Object> claims, String subject) { // this will create token
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
+        // this will create token
         // claims is what will be in the payload
         // calling from the jwt library , Subject is the person being authenticated, we are passing the username as the subject
         return Jwts.builder()

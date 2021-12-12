@@ -4,6 +4,7 @@ import edu.miu.waa.minimartecommerce.jwt_factory.UserDetailService;
 import edu.miu.waa.minimartecommerce.jwt_factory.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,7 +40,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/seller").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/buyer").permitAll()
-                .antMatchers("/product/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/product").hasAuthority("SELLER")
+                .antMatchers(HttpMethod.PUT, "/product").hasAuthority("SELLER")
+                .antMatchers(HttpMethod.GET, "/product/**").permitAll()
 
                 .antMatchers(HttpMethod.GET,"/user/seller/unapproved/get-all").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/user/seller/{id}/approve").hasAuthority("ADMIN")

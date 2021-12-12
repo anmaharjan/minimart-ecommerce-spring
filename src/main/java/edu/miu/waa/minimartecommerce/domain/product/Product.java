@@ -1,6 +1,7 @@
 package edu.miu.waa.minimartecommerce.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.view.View;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -27,9 +28,6 @@ public class Product {
     @JsonView({View.ProductView.class, View.ProductListView.class})
     private String name;
     @JsonView({View.ProductView.class, View.ProductListView.class})
-    @Column(name = "product_code")
-    private String productCode;
-        @JsonView({View.ProductView.class, View.ProductListView.class})
     @Column(name = "actual_price")
     private double actualPrice;
     @JsonView({View.ProductView.class, View.ProductListView.class})
@@ -60,18 +58,8 @@ public class Product {
     @Fetch(FetchMode.SELECT)
     private List<ProductImages> productImages = new ArrayList<>();
 
-    public Product(String name, String productCode, double actualPrice,
-                   double salePrice, boolean inStock, boolean displaySize,
-                   Date createdDate, List<ProductImages> productImages,
-                   String description, String highlights) {
-        this.name = name;
-        this.productCode = productCode;
-        this.actualPrice = actualPrice;
-        this.salePrice = salePrice;
-        this.createdDate = createdDate;
-        this.updatedDate = createdDate;
-        this.productImages = productImages;
-        this.description = description;
-        this.highlights = highlights;
-    }
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @Fetch(FetchMode.SELECT)
+    private User user;
 }
