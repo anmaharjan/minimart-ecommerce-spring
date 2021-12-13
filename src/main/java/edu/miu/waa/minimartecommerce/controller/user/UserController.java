@@ -38,7 +38,7 @@ public class UserController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @PostMapping("/buyer")
+    @PostMapping("/buyer/save")
     public ResponseEntity<ResponseMessage> saveBuyer(@Valid @RequestBody UserDto dto){
         ResponseMessage response = userService.saveUsers(dto, false);
         return new ResponseEntity<>(response, response.getHttpStatus());

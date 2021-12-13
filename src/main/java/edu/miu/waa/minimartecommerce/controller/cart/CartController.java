@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin
 public class CartController {
     private final ICartItemService cartItemService;
 

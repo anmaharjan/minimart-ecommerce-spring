@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/review")
+@CrossOrigin
 public class ReviewController {
     private final IReviewService reviewService;
 
