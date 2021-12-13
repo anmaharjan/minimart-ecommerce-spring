@@ -61,4 +61,10 @@ public class ProductController {
         Optional<Product> productOpt = productService.findById(id);
         return productOpt.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseMessage> deleteById(@PathVariable(name = "id") long id){
+        ResponseMessage response = productService.deleteById(id);
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
 }

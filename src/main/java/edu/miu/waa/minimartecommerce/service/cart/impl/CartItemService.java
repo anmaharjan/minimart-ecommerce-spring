@@ -45,6 +45,9 @@ public class CartItemService implements ICartItemService {
 
         if(cartItemOpt.isPresent()){
             CartItem cartItem = cartItemOpt.get();
+            if(dto.getQuantity() > cartItem.getProduct().getStockQuantity())
+                return new ResponseMessage("Out of Stock.", HttpStatus.BAD_REQUEST);
+
             cartItem.setQuantity(dto.getQuantity());
             cartItemRepository.save(cartItem);
             return new ResponseMessage("Saved.", HttpStatus.CREATED);
@@ -54,7 +57,11 @@ public class CartItemService implements ICartItemService {
             Optional<User> user = userService.findById(dto.getUserId());
 
             if(product.isPresent() && user.isPresent()){
-                CartItem cartItem = new CartItem(product.get(), dto.getQuantity(), user.get());
+                Product product1 = product.get();
+                if(dto.getQuantity() > product1.getStockQuantity())
+                    return new ResponseMessage("Out of Stock.", HttpStatus.BAD_REQUEST);
+
+                CartItem cartItem = new CartItem(product1, dto.getQuantity(), user.get());
                 cartItemRepository.save(cartItem);
                 return new ResponseMessage("Saved.", HttpStatus.CREATED);
             }
@@ -88,5 +95,10 @@ public class CartItemService implements ICartItemService {
         Map<String, Integer> count = new HashMap<>();
         count.put("cart", cartItemRepository.countAllByUser_Id(userId));
         return count;
+    }
+
+    @Override
+    public void deleteAllByUserId(long userId) {
+        cartItemRepository.deleteAllByUser_Id(userId);
     }
 }

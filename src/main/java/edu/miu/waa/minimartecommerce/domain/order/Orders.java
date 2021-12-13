@@ -26,11 +26,11 @@ public class Orders {
 
     @JsonView({View.OrderView.class, View.OrderListView.class,  View.OrderAdminListView.class})
     @Column(name = "created_date")
-    private Date createdDate;
+    private Date createdDate = new Date();
 
     @JsonView({View.OrderView.class})
     @Column(name = "updated_date")
-    private Date updatedDate;
+    private Date updatedDate = new Date();
 
     @JsonView({View.OrderView.class, View.OrderAdminListView.class})
     @ManyToOne(targetEntity = User.class, cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
@@ -57,4 +57,12 @@ public class Orders {
     @OneToOne(targetEntity = Invoice.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
+
+    public Orders(User user, ShippingAddress shippingAddress, OrderStatus orderStatus, Set<OrderItem> orderItems, Invoice invoice){
+        this.user = user;
+        this.shippingAddress = shippingAddress;
+        this.orderStatus = orderStatus;
+        this.orderItems = orderItems;
+        this.invoice = invoice;
+    }
 }

@@ -73,6 +73,9 @@ public class User {
     @JoinColumn(name = "billing_address_id")
     private BillingAddress billingAddress;
 
+    @OneToMany(targetEntity = ShippingAddress.class, mappedBy = "user")
+    private List<ShippingAddress> shippingAddress;
+
     @OneToMany(targetEntity = PaymentDetail.class, cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "user")
     private List<PaymentDetail> paymentDetails = new ArrayList<>();

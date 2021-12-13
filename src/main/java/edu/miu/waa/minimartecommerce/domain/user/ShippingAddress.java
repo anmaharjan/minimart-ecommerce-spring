@@ -2,7 +2,9 @@ package edu.miu.waa.minimartecommerce.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.miu.waa.minimartecommerce.view.View;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -32,4 +34,8 @@ public class ShippingAddress {
     @Column(name = "contact_no")
     @JsonView(View.OrderView.class)
     private String contactNo="";
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -18,4 +18,6 @@ public interface ICartItemService {
     ResponseMessage deleteByIdAndUserId(long id, long userId);
 
     Map<String, Integer> countCartItemsByUserId(long userId);
+
+    void deleteAllByUserId(long userId);
 }

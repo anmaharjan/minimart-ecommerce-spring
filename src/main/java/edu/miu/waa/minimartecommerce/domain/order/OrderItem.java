@@ -29,4 +29,10 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     @JsonView(View.OrderView.class)
     private Product product;
+
+    public OrderItem(int quantity, double itemPrice, Product product){
+        this.quantity = quantity;
+        this.itemPrice = itemPrice;
+        this.product = product;
+    }
 }

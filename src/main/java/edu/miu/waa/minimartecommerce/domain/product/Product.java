@@ -23,17 +23,20 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
     private long id;
 
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
     private String name;
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
     @Column(name = "actual_price")
     private double actualPrice;
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
     @Column(name = "sale_price")
     private double salePrice = 0;
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
+    @Column(name = "on_sale")
+    private boolean onSale;
     @JsonView({View.ProductView.class, View.ProductListView.class})
     @Column(name = "quantity_in_stock")
     private int stockQuantity;
@@ -53,7 +56,7 @@ public class Product {
     @JsonView({View.ProductView.class, View.CartView.class})
     private int rating=1;
 
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
     @OneToMany(targetEntity = ProductImages.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     @Fetch(FetchMode.SELECT)

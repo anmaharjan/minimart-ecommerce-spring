@@ -12,6 +12,7 @@ public class ProductRequestDto {
     private String name="";
     private double actualPrice =0;
     private double salePrice=0;
+    private boolean onSale;
     private int stockQuantity;
     private String description = "";
     private String highlights = "";

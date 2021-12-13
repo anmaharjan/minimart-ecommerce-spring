@@ -55,12 +55,14 @@ public class UserController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
+    /* ---- Buyer ---- */
     @PostMapping("/payment-details")
     public ResponseEntity<ResponseMessage> savePaymentDetail(@RequestBody PaymentDetailDto dto){
         ResponseMessage response = userService.addPaymentDetail(dto);
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
+    @JsonView(View.UserDetailView.class)
     @GetMapping("/{userId}/payment-details")
     public ResponseEntity<List<PaymentDetail>> findAllPaymentDetail(@PathVariable(name = "userId") long userId){
         return ResponseEntity.ok(userService.getAllPaymentDetails(userId));

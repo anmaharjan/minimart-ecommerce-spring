@@ -18,4 +18,10 @@ public interface ICartItemRepository extends JpaRepository<CartItem, Long> {
     void deleteByIdAndUser_Id(long id, long userId);
 
     int countAllByUser_Id(long userId);
+
+    @Transactional
+    void deleteAllByUser_Id(long userId);
+
+    @Transactional
+    void deleteAllByProduct_Id(long productId);
 }

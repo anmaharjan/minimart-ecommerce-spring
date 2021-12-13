@@ -6,6 +6,8 @@ import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
 import edu.miu.waa.minimartecommerce.dto.product.ProductRequestDto;
 import edu.miu.waa.minimartecommerce.exceptionHandling.exceptions.ProductException;
+import edu.miu.waa.minimartecommerce.repository.cart.ICartItemRepository;
+import edu.miu.waa.minimartecommerce.repository.order.OrderRepository;
 import edu.miu.waa.minimartecommerce.repository.product.IProductImageRepository;
 import edu.miu.waa.minimartecommerce.repository.product.IProductRepository;
 import edu.miu.waa.minimartecommerce.service.product.IProductService;
@@ -25,12 +27,19 @@ public class ProductService implements IProductService {
     private final ModelMapper modelMapper;
     private final IUserService userService;
     private final IProductImageRepository productImageRepository;
+    private final OrderRepository orderRepository;
+    private final ICartItemRepository cartItemRepository;
 
-    public ProductService(IProductRepository productRepository, ModelMapper modelMapper, IUserService userService, IProductImageRepository productImageRepository) {
+    public ProductService(IProductRepository productRepository,
+                          ModelMapper modelMapper, IUserService userService,
+                          IProductImageRepository productImageRepository,
+                          OrderRepository orderRepository, ICartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.productImageRepository = productImageRepository;
+        this.orderRepository = orderRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Override
@@ -70,12 +79,8 @@ public class ProductService implements IProductService {
     @Override
     public ResponseMessage update(ProductRequestDto dto) {
         Optional<Product> productOpt = productRepository.findById(dto.getId());
-        Optional<User> userOpt = userService.findById(dto.getUserId());
-        if(productOpt.isPresent() && userOpt.isPresent()){
+        if(productOpt.isPresent()){
             Product product = productOpt.get();
-
-            if(product.getUser().getId() != dto.getUserId())
-                return new ResponseMessage("Unauthorized attempt to change data.", HttpStatus.METHOD_NOT_ALLOWED);
 
             if(!dto.getName().isEmpty()) product.setName(dto.getName());
             if(dto.getActualPrice()!=0) product.setActualPrice(dto.getActualPrice());
@@ -132,7 +137,13 @@ public class ProductService implements IProductService {
 
     @Override
     public ResponseMessage deleteById(long id) {
-        return null;
+        int count = orderRepository.countAllByProductId(id);
+        if(count == 0){
+            productRepository.deleteById(id);
+            cartItemRepository.deleteAllByProduct_Id(id);
+            return new ResponseMessage("Deleted.", HttpStatus.OK);
+        }
+        return new ResponseMessage("Cannot delete.", HttpStatus.BAD_REQUEST);
     }
 
     @Override

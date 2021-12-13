@@ -39,5 +39,12 @@ public class Invoice {
 
     @Column(name = "invoice_date")
     @JsonView(View.OrderView.class)
-    private Date invoiceDate;
+    private Date invoiceDate = new Date();
+
+    public Invoice(InvoiceStatus invoiceStatus, Payment payment, PaymentDetail paymentDetail){
+        this.invoiceStatus = invoiceStatus;
+        this.payment = payment;
+        this.paymentDetail = paymentDetail;
+        this.invoiceDate = new Date();
+    }
 }

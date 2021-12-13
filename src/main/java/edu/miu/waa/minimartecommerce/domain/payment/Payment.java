@@ -23,7 +23,7 @@ public class Payment {
 
     @JsonView(View.OrderView.class)
     @Column(name = "payment_date")
-    private Date paymentDate;
+    private Date paymentDate = new Date();
 
     @JsonView(View.OrderView.class)
     @Column(name = "paid_amount")
@@ -38,4 +38,9 @@ public class Payment {
     @OneToOne(targetEntity = Invoice.class, cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
+
+    public Payment(double paidAmount, PaymentStatus paymentStatus){
+        this.paidAmount = paidAmount;
+        this.paymentStatus = paymentStatus;
+    }
 }

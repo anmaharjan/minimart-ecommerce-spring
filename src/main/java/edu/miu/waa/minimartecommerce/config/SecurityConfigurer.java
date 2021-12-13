@@ -41,8 +41,21 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/user/seller").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/buyer").permitAll()
 
+                .antMatchers("/order").hasAuthority("SELLER")
+                .antMatchers("/order/order-status/update").hasAuthority("SELLER")
+                .antMatchers("/order/invoice-status/update").hasAuthority("SELLER")
+
+                // Buyer
+                .antMatchers("/user/payment-details").hasAuthority("BUYER")
+                .antMatchers("/user/{userId}/payment-details").hasAuthority("BUYER")
+
+                .antMatchers("/order/user/{buyerId}").hasAuthority("BUYER")
+                .antMatchers("/order/checkout").hasAuthority("BUYER")
+
+
                 // Product APIs
                 .antMatchers(HttpMethod.POST, "/product").hasAuthority("SELLER")
+                .antMatchers(HttpMethod.DELETE, "/product/{id}").hasAuthority("SELLER")
                 .antMatchers(HttpMethod.PUT, "/product").hasAuthority("SELLER")
                 .antMatchers(HttpMethod.GET, "/product/**").permitAll()
 

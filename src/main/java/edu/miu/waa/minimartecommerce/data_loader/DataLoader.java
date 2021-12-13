@@ -81,11 +81,7 @@ public class DataLoader implements ApplicationRunner {
                     new OrderStatus(COMPLETED.toString()),
                     new OrderStatus(CANCELLED.toString()),
                     new OrderStatus(NEW.toString()),
-                    new OrderStatus(PROCESSING.toString()),
-                    new OrderStatus(PENDING.toString()),
-                    new OrderStatus(SHIPPED.toString()),
-                    new OrderStatus(REFUNDED.toString()),
-                    new OrderStatus(REJECTED.toString())
+                    new OrderStatus(SHIPPED.toString())
             ));
         }
 
