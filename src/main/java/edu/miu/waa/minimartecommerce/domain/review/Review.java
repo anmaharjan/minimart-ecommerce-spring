@@ -19,30 +19,36 @@ import java.util.Date;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({View.CommentView.class})
+    @JsonView(View.ReviewView.class)
     private long id;
 
     @Column(columnDefinition = "text")
-    @JsonView({View.CommentView.class})
+    @JsonView(View.ReviewView.class)
     private String comment;
-    @JsonView({View.CommentView.class})
-    private int rate;
     @Column(name = "created_date")
-    @JsonView({View.CommentView.class})
-    private Date createdDate;
+    @JsonView(View.ReviewView.class)
+    private Date createdDate = new Date();
     @Column(name = "updated_date")
-    @JsonView({View.CommentView.class})
-    private Date updatedDate;
+    @JsonView(View.ReviewView.class)
+    private Date updatedDate = new Date();
 
     @Column(name = "admin_approved")
     private boolean adminApproved;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonView({View.CommentView.class})
+    @JsonView(View.ReviewView.class)
     private User user;
 
     @ManyToOne(targetEntity = Product.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonView(View.ReviewView.class)
     private Product product;
+
+    public Review(String comment, boolean adminApproved, User user, Product product){
+        this.comment = comment;
+        this.adminApproved = adminApproved;
+        this.user = user;
+        this.product = product;
+    }
 }

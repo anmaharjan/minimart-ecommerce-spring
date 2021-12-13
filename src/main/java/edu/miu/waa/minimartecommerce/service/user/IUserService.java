@@ -1,8 +1,10 @@
 package edu.miu.waa.minimartecommerce.service.user;
 
+import edu.miu.waa.minimartecommerce.domain.user.Followers;
 import edu.miu.waa.minimartecommerce.domain.user.PaymentDetail;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
+import edu.miu.waa.minimartecommerce.dto.user.FollowersDto;
 import edu.miu.waa.minimartecommerce.dto.user.PaymentDetailDto;
 import edu.miu.waa.minimartecommerce.dto.user.UserDto;
 
@@ -25,4 +27,11 @@ public interface IUserService {
     ResponseMessage addPaymentDetail(PaymentDetailDto dto);
 
     List<PaymentDetail> getAllPaymentDetails(long userId);
+
+    /* ---------- Followers ------------ */
+    ResponseMessage addFollowingUser(FollowersDto dto);
+
+    ResponseMessage removeFollowingUser(long followersId);
+
+    List<Followers> findAllByUserId(long id);
 }

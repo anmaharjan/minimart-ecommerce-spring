@@ -41,17 +41,18 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/user/seller").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/buyer").permitAll()
 
+                // User : Buyer
+                .antMatchers("/user/payment-details").hasAuthority("BUYER")
+                .antMatchers("/user/{userId}/payment-details").hasAuthority("BUYER")
+
+                // Order : Seller
                 .antMatchers("/order").hasAuthority("SELLER")
                 .antMatchers("/order/order-status/update").hasAuthority("SELLER")
                 .antMatchers("/order/invoice-status/update").hasAuthority("SELLER")
 
-                // Buyer
-                .antMatchers("/user/payment-details").hasAuthority("BUYER")
-                .antMatchers("/user/{userId}/payment-details").hasAuthority("BUYER")
-
+                // Order : Buyer
                 .antMatchers("/order/user/{buyerId}").hasAuthority("BUYER")
                 .antMatchers("/order/checkout").hasAuthority("BUYER")
-
 
                 // Product APIs
                 .antMatchers(HttpMethod.POST, "/product").hasAuthority("SELLER")
@@ -61,6 +62,20 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
                 // Cart APIs
                 .antMatchers("/cart/**").hasAuthority("BUYER")
+
+                // Review
+                .antMatchers(HttpMethod.GET, "/review/unapproved").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/review/approve/{id}").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/review/{id}").hasAuthority("ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/review/product/{productId}").permitAll()
+                .antMatchers(HttpMethod.POST, "/review").hasAuthority("BUYER")
+                .antMatchers(HttpMethod.PUT,"/review").hasAuthority("BUYER")
+
+                // Following
+                .antMatchers(HttpMethod.POST, "/user/following").hasAuthority("BUYER")
+                .antMatchers(HttpMethod.DELETE,"/user/following/{followerId}").hasAuthority("BUYER")
+                .antMatchers(HttpMethod.DELETE,"/user/{userId}/following").hasAuthority("BUYER")
 
                 // Admin APIs
                 .antMatchers(HttpMethod.GET,"/user/seller/unapproved/get-all").hasAuthority("ADMIN")
@@ -83,5 +98,4 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

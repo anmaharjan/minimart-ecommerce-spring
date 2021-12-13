@@ -2,6 +2,7 @@ package edu.miu.waa.minimartecommerce.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.miu.waa.minimartecommerce.domain.cart.CartItem;
+import edu.miu.waa.minimartecommerce.domain.review.Review;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.view.View;
 import lombok.*;
@@ -23,10 +24,10 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class, View.ReviewView.class})
     private long id;
 
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class, View.ReviewView.class})
     private String name;
     @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
     @Column(name = "actual_price")
@@ -53,10 +54,7 @@ public class Product {
     @Column(columnDefinition = "text")
     private String highlights = "";
 
-    @JsonView({View.ProductView.class, View.CartView.class})
-    private int rating=1;
-
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class, View.ReviewView.class})
     @OneToMany(targetEntity = ProductImages.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     @Fetch(FetchMode.SELECT)
@@ -70,4 +68,6 @@ public class Product {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "product", fetch = FetchType.LAZY)
     private List<CartItem> cartItems = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Review> reviews = new ArrayList<>();
 }

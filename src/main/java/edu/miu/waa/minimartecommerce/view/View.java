@@ -10,15 +10,10 @@ public class View {
     public interface OrderListView{}
     public interface OrderAdminListView{}
 
-    public interface WishListView{}
-    public interface CommentView{}
+    public interface ReviewView{}
 
     public interface UserListView {}
     public interface UserDetailView{}
 
-    public interface MailView{}
-    public interface SentMailListView{}
-    public interface InboxMailListView{}
-
-    public interface RelevantWordView{}
+    public interface FollowerView{}
 }

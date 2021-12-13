@@ -30,23 +30,23 @@ public class User {
 
     @NotNull
     @NotEmpty
-    @JsonView({View.OrderView.class, View.CommentView.class, View.UserListView.class,
-            View.UserDetailView.class, View.OrderAdminListView.class})
+    @JsonView({View.OrderView.class, View.ReviewView.class, View.UserListView.class,
+            View.UserDetailView.class, View.OrderAdminListView.class, View.FollowerView.class})
     private String firstname;
-    @JsonView({View.OrderView.class, View.CommentView.class, View.UserListView.class,
-            View.UserDetailView.class, View.OrderAdminListView.class})
+    @JsonView({View.OrderView.class, View.ReviewView.class, View.UserListView.class,
+            View.UserDetailView.class, View.OrderAdminListView.class, View.FollowerView.class})
     private String middlename;
     @NotNull
     @NotEmpty
-    @JsonView({View.OrderView.class, View.CommentView.class, View.UserListView.class,
-            View.UserDetailView.class, View.OrderAdminListView.class})
+    @JsonView({View.OrderView.class, View.ReviewView.class, View.UserListView.class,
+            View.UserDetailView.class, View.OrderAdminListView.class, View.FollowerView.class})
     private String lastname;
 
     @NotNull
     @NotEmpty
     @Email
-    @JsonView({View.OrderView.class, View.WishListView.class, View.CommentView.class, View.UserListView.class,
-            View.UserDetailView.class, View.OrderAdminListView.class})
+    @JsonView({View.OrderView.class, View.ReviewView.class, View.UserListView.class,
+            View.UserDetailView.class, View.OrderAdminListView.class, View.FollowerView.class})
     private String username;
 
     @NotNull
@@ -79,6 +79,9 @@ public class User {
     @OneToMany(targetEntity = PaymentDetail.class, cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "user")
     private List<PaymentDetail> paymentDetails = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Followers> followers = new ArrayList<>();
 
     public User(String firstname, String middlename, String lastname, String username,
                 String password, Set<Role> roles){

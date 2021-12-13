@@ -25,7 +25,7 @@ public class ProductImages{
     private String extension;
     @Column(name = "image_path", columnDefinition = "text")
     private String imagePath;
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.CartView.class, View.OrderView.class, View.ReviewView.class})
     @Column(name = "image_url", columnDefinition = "text")
     private String imageUrl;
 
