@@ -107,7 +107,8 @@ public class UserService implements IUserService {
     public ResponseMessage addPaymentDetail(PaymentDetailDto dto) {
         Optional<User> userOpt = findById(dto.getUserId());
         if(userOpt.isPresent()){
-            PaymentDetail paymentDetail = modelMapper.map(dto, PaymentDetail.class);
+            PaymentDetail paymentDetail = new PaymentDetail(dto.getPaymentType(), dto.getCardNo(),
+                    dto.getSecurityCode(), dto.getExpiry(), userOpt.get());
             paymentDetail.setUser(userOpt.get());
 
             paymentDetailRepository.save(paymentDetail);

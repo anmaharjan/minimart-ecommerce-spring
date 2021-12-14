@@ -36,10 +36,11 @@ public class PaymentDetail {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public PaymentDetail(String paymentType, String cardNo, String securityCode, String expiry){
+    public PaymentDetail(String paymentType, String cardNo, String securityCode, String expiry, User user){
         this.paymentType = paymentType;
         this.cardNo = cardNo;
         this.securityCode = securityCode;
         this.expiry = expiry;
+        this.user = user;
     }
 }

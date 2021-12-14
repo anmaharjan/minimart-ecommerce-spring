@@ -1,5 +1,6 @@
 package edu.miu.waa.minimartecommerce.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.miu.waa.minimartecommerce.domain.user.ShippingAddress;
 import edu.miu.waa.minimartecommerce.domain.user.User;
@@ -26,10 +27,12 @@ public class Orders {
 
     @JsonView({View.OrderView.class, View.OrderListView.class,  View.OrderAdminListView.class})
     @Column(name = "created_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private Date createdDate = new Date();
 
     @JsonView({View.OrderView.class})
     @Column(name = "updated_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private Date updatedDate = new Date();
 
     @JsonView({View.OrderView.class, View.OrderAdminListView.class})

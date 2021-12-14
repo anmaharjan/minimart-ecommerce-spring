@@ -41,10 +41,9 @@ public class CartController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @DeleteMapping("{cartId}/user/{userId}")
-    public ResponseEntity<ResponseMessage> delete(@PathVariable(name = "cartId") long cartId,
-                                                  @PathVariable(name = "userId") long userId){
-        ResponseMessage response = cartItemService.deleteByIdAndUserId(cartId, userId);
+    @DeleteMapping("{cartId}")
+    public ResponseEntity<ResponseMessage> delete(@PathVariable(name = "cartId") long cartId){
+        ResponseMessage response = cartItemService.deleteById(cartId);
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 

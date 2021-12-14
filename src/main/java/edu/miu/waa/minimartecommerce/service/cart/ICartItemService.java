@@ -15,7 +15,7 @@ public interface ICartItemService {
 
     ResponseMessage update(CartItemUpdateDto dto);
 
-    ResponseMessage deleteByIdAndUserId(long id, long userId);
+    ResponseMessage deleteById(long id);
 
     Map<String, Integer> countCartItemsByUserId(long userId);
 

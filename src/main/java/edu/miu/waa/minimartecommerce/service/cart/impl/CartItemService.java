@@ -85,8 +85,8 @@ public class CartItemService implements ICartItemService {
     }
 
     @Override
-    public ResponseMessage deleteByIdAndUserId(long id, long userId) {
-        cartItemRepository.deleteByIdAndUser_Id(id, userId);
+    public ResponseMessage deleteById(long id) {
+        cartItemRepository.deleteById(id);
         return new ResponseMessage("Deleted.", HttpStatus.OK);
     }
 

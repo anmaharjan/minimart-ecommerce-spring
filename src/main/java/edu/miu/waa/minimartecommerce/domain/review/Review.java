@@ -1,5 +1,6 @@
 package edu.miu.waa.minimartecommerce.domain.review;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 import edu.miu.waa.minimartecommerce.domain.product.Product;
 import edu.miu.waa.minimartecommerce.domain.user.User;
@@ -25,9 +26,11 @@ public class Review {
     @Column(columnDefinition = "text")
     @JsonView(View.ReviewView.class)
     private String comment;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy hh:mm:ss")
     @Column(name = "created_date")
     @JsonView(View.ReviewView.class)
     private Date createdDate = new Date();
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy hh:mm:ss")
     @Column(name = "updated_date")
     @JsonView(View.ReviewView.class)
     private Date updatedDate = new Date();

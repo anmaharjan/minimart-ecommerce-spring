@@ -79,7 +79,6 @@ public class OrderService implements IOrderService {
         Optional<User> userOpt = userRepository.findById(orderDto.getUserId());
         Optional<PaymentDetail> paymentDetailOpt = paymentDetailRepository.findById(orderDto.getPaymentDetailId());
 
-        System.out.println(orderDto.getUserId() + " " + orderDto.getUserId());
         if(userOpt.isPresent() && paymentDetailOpt.isPresent()){
             User user = userOpt.get();
 

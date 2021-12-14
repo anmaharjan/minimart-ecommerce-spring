@@ -50,7 +50,7 @@ public class Product {
     @JsonView({View.ProductView.class, View.ProductEditView.class})
     @Column(columnDefinition = "text")
     private String description = "";
-    @JsonView({View.ProductView.class, View.ProductListView.class, View.ProductEditView.class, View.CartView.class})
+    @JsonView({View.ProductView.class, View.ProductListView.class, View.ProductEditView.class, View.OrderView.class, View.CartView.class})
     @Column(columnDefinition = "text")
     private String highlights = "";
 
