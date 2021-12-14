@@ -5,9 +5,7 @@ import edu.miu.waa.minimartecommerce.domain.user.Followers;
 import edu.miu.waa.minimartecommerce.domain.user.PaymentDetail;
 import edu.miu.waa.minimartecommerce.domain.user.User;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
-import edu.miu.waa.minimartecommerce.dto.user.FollowersDto;
-import edu.miu.waa.minimartecommerce.dto.user.PaymentDetailDto;
-import edu.miu.waa.minimartecommerce.dto.user.UserDto;
+import edu.miu.waa.minimartecommerce.dto.user.*;
 import edu.miu.waa.minimartecommerce.service.user.IUserService;
 import edu.miu.waa.minimartecommerce.view.View;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -32,6 +31,13 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    @JsonView(View.UserDetailView.class)
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable(name = "id") long id){
+        Optional<User> user = userService.findById(id);
+        return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/seller")
     public ResponseEntity<ResponseMessage> saveSeller(@Valid @RequestBody UserDto dto){
         ResponseMessage response = userService.saveUsers(dto, true);
@@ -41,6 +47,18 @@ public class UserController {
     @PostMapping("/buyer/save")
     public ResponseEntity<ResponseMessage> saveBuyer(@Valid @RequestBody UserDto dto){
         ResponseMessage response = userService.saveUsers(dto, false);
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+    @PutMapping("/info/update")
+    public ResponseEntity<ResponseMessage> updateUserInfo(@RequestBody UpdateUserDto dto){
+        ResponseMessage response = userService.updateInfo(dto);
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+    @PutMapping("/billing-address/update")
+    public ResponseEntity<ResponseMessage> updateBillingAddress(@RequestBody UpdateAddressDto dto){
+        ResponseMessage response = userService.updateBillingAddress(dto);
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 

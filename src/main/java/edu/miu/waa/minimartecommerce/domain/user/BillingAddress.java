@@ -17,6 +17,7 @@ import javax.validation.constraints.NotEmpty;
 public class BillingAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(View.UserDetailView.class)
     private long id;
 
     @JsonView({View.OrderView.class, View.UserDetailView.class})

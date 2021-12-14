@@ -1,17 +1,9 @@
 package edu.miu.waa.minimartecommerce.service.user.impl;
 
-import edu.miu.waa.minimartecommerce.domain.user.Followers;
-import edu.miu.waa.minimartecommerce.domain.user.PaymentDetail;
-import edu.miu.waa.minimartecommerce.domain.user.Role;
-import edu.miu.waa.minimartecommerce.domain.user.User;
+import edu.miu.waa.minimartecommerce.domain.user.*;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
-import edu.miu.waa.minimartecommerce.dto.user.FollowersDto;
-import edu.miu.waa.minimartecommerce.dto.user.PaymentDetailDto;
-import edu.miu.waa.minimartecommerce.dto.user.UserDto;
-import edu.miu.waa.minimartecommerce.repository.user.IFollowersRepository;
-import edu.miu.waa.minimartecommerce.repository.user.IPaymentDetailRepository;
-import edu.miu.waa.minimartecommerce.repository.user.IRoleRepository;
-import edu.miu.waa.minimartecommerce.repository.user.IUserRepository;
+import edu.miu.waa.minimartecommerce.dto.user.*;
+import edu.miu.waa.minimartecommerce.repository.user.*;
 import edu.miu.waa.minimartecommerce.service.user.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +27,16 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final IPaymentDetailRepository paymentDetailRepository;
     private final IFollowersRepository followersRepository;
+    private final IBillingAddressRepository billingAddressRepository;
 
-    public UserService(IUserRepository userRepository, IRoleRepository roleRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, IPaymentDetailRepository paymentDetailRepository, IFollowersRepository followersRepository){
+    public UserService(IUserRepository userRepository, IRoleRepository roleRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, IPaymentDetailRepository paymentDetailRepository, IFollowersRepository followersRepository, IBillingAddressRepository billingAddressRepository){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.paymentDetailRepository = paymentDetailRepository;
         this.followersRepository = followersRepository;
+        this.billingAddressRepository = billingAddressRepository;
     }
 
     @Override
@@ -83,6 +77,35 @@ public class UserService implements IUserService {
         return new ResponseMessage(
                 String.format("Duplicate user!! User with %s already exists.", userDto.getUsername()),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseMessage updateInfo(UpdateUserDto dto) {
+        Optional<User> userOpt = userRepository.findById(dto.getId());
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+            if(!dto.getFirstname().isEmpty()) user.setFirstname(dto.getFirstname());
+            if(!dto.getMiddlename().isEmpty()) user.setMiddlename(dto.getMiddlename());
+            if(!dto.getLastname().isEmpty()) user.setLastname(dto.getLastname());
+            userRepository.save(user);
+            return new ResponseMessage("Updated Successfully.", HttpStatus.OK);
+        }
+        return new ResponseMessage("User not found!!", HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseMessage updateBillingAddress(UpdateAddressDto dto) {
+        Optional<BillingAddress> billingAddressOpt = billingAddressRepository.findById(dto.getId());
+        if(billingAddressOpt.isPresent()){
+            BillingAddress billingAddress = billingAddressOpt.get();
+            if(!dto.getAddress().isEmpty()) billingAddress.setAddress(dto.getAddress());
+            if(!dto.getCity().isEmpty()) billingAddress.setCity(dto.getCity());
+            if(!dto.getContactNo().isEmpty()) billingAddress.setContactNo(dto.getContactNo());
+            if(!dto.getState().isEmpty()) billingAddress.setState(dto.getState());
+            billingAddressRepository.save(billingAddress);
+            return new ResponseMessage("Updated Successfully.", HttpStatus.OK);
+        }
+        return new ResponseMessage("Billing Address not found!!", HttpStatus.NOT_FOUND);
     }
 
     @Override

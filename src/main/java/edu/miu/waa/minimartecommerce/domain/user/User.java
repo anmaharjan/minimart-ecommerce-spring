@@ -25,7 +25,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(View.UserListView.class)
+    @JsonView({View.UserListView.class,  View.UserDetailView.class})
     private long id;
 
     @NotNull
@@ -69,6 +69,7 @@ public class User {
     @JsonView({View.UserListView.class, View.UserDetailView.class})
     private Set<Role> roles;
 
+    @JsonView({View.OrderView.class, View.UserDetailView.class})
     @OneToOne(targetEntity = BillingAddress.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "billing_address_id")
     private BillingAddress billingAddress;
