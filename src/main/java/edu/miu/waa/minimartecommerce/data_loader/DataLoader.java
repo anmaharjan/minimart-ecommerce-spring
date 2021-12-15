@@ -61,7 +61,7 @@ public class DataLoader implements ApplicationRunner {
         if(userRepository.count() == 0){
             Set<Role> roles = Stream.of(roleRepository.findByRole(ADMIN.toString()))
                     .collect(Collectors.toSet());
-            String password = passwordEncoder.encode("Qwerty12345");
+            String password = passwordEncoder.encode("qwerty");
             User user = new User("Admin", "", "MiniMart",
                     "admin@minimart.com", password, roles);
             user.setAdminApproved(true);
