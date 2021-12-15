@@ -25,7 +25,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({View.UserListView.class,  View.UserDetailView.class})
+    @JsonView({View.UserListView.class,  View.UserDetailView.class, View.ReviewView.class})
     private long id;
 
     @NotNull

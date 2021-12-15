@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -65,5 +66,10 @@ public class OrderController {
     public ResponseEntity<ResponseMessage> updateInvoiceStatus(@RequestBody InvoiceStatusDto dto){
         ResponseMessage response = orderService.updateInvoiceStatus(dto.getInvoiceId(), dto.getStatus());
         return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+    @GetMapping("/user/{userId}/count/completed")
+    public ResponseEntity<Map<String, Integer>> countAllCompletedOrderOfUser(@PathVariable(name = "userId") long userId){
+        return ResponseEntity.ok(orderService.countAllCompletedOrderOfUser(userId));
     }
 }

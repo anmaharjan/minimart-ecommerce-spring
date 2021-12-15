@@ -16,23 +16,26 @@ import edu.miu.waa.minimartecommerce.repository.payment.PaymentStatusRepository;
 import edu.miu.waa.minimartecommerce.repository.user.IPaymentDetailRepository;
 import edu.miu.waa.minimartecommerce.repository.user.IUserRepository;
 import edu.miu.waa.minimartecommerce.service.cart.ICartItemService;
+import edu.miu.waa.minimartecommerce.service.mail.IEmailService;
 import edu.miu.waa.minimartecommerce.service.order.IOrderService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 import static edu.miu.waa.minimartecommerce.constant.product.InvoiceStatus.ISSUED;
-import static edu.miu.waa.minimartecommerce.constant.product.OrderStatus.CANCELLED;
-import static edu.miu.waa.minimartecommerce.constant.product.OrderStatus.NEW;
+import static edu.miu.waa.minimartecommerce.constant.product.OrderStatus.*;
 import static edu.miu.waa.minimartecommerce.constant.product.PaymentStatus.PENDING;
 
 @Service
 public class OrderService implements IOrderService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final OrderRepository orderRepository;
     private final IUserRepository userRepository;
     private final OrderStatusRepository orderStatusRepository;
@@ -42,12 +45,13 @@ public class OrderService implements IOrderService {
     private final IPaymentDetailRepository paymentDetailRepository;
     private final ModelMapper modelMapper;
     private final InvoiceRepository invoiceRepository;
+    private final IEmailService emailService;
 
     public OrderService(OrderRepository orderRepository, IUserRepository userRepository,
                         OrderStatusRepository orderStatusRepository,
                         InvoiceStatusRepository invoiceStatusRepository, ICartItemService cartItemService,
                         PaymentStatusRepository paymentStatusRepository,
-                        IPaymentDetailRepository paymentDetailRepository, ModelMapper modelMapper, InvoiceRepository invoiceRepository) {
+                        IPaymentDetailRepository paymentDetailRepository, ModelMapper modelMapper, InvoiceRepository invoiceRepository, IEmailService emailService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.orderStatusRepository = orderStatusRepository;
@@ -57,6 +61,7 @@ public class OrderService implements IOrderService {
         this.paymentDetailRepository = paymentDetailRepository;
         this.modelMapper = modelMapper;
         this.invoiceRepository = invoiceRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -113,6 +118,18 @@ public class OrderService implements IOrderService {
                         )
                 );
                 cartItemService.deleteAllByUserId(user.getId());
+
+                String subject = "Ordered Notification";
+                String body = "<strong>Hi " + user.getFirstname() + "</strong>,<br/><br/>" +
+                        "You have ordered product from MIU MiniMart. We will process it as soon as possible <br/><br/>" +
+                        "Thank you<br/>" +
+                        "<strong>MIU MiniMart</strong>";
+                try {
+                    emailService.sendMail(user.getUsername(), subject, body);
+                } catch (MessagingException | UnsupportedEncodingException e) {
+                    logger.error("Error while sending email.");
+                }
+
                 return new ResponseMessage("Saved.", HttpStatus.OK);
             }
             return new ResponseMessage("Cart is empty.", HttpStatus.NOT_ACCEPTABLE);
@@ -130,6 +147,18 @@ public class OrderService implements IOrderService {
             if (orderStatus.equalsIgnoreCase(NEW.toString())) {
                 orders.setOrderStatus(orderStatusRepository.getOneByStatus(CANCELLED.toString()));
                 orderRepository.save(orders);
+
+                String subject = "Order Cancellation";
+                String body = "<strong>Hi " + orders.getUser().getFirstname() + "</strong>,<br/><br/>" +
+                        "Your order has been cancelled. <br/><br/>" +
+                        "Thank you<br/>" +
+                        "<strong>MIU MiniMart</strong>";
+                try {
+                    emailService.sendMail(orders.getUser().getUsername(), subject, body);
+                } catch (MessagingException | UnsupportedEncodingException e) {
+                    logger.error("Error while sending email.");
+                }
+
                 return new ResponseMessage("Cancelled order.", HttpStatus.OK);
             }
             return new ResponseMessage("Cannot cancel the order.", HttpStatus.BAD_REQUEST);
@@ -145,6 +174,18 @@ public class OrderService implements IOrderService {
             Orders orders = ordersOpt.get();
             orders.setOrderStatus(status);
             orderRepository.save(orders);
+
+            String subject = "Order Status Update";
+            String body = "<strong>Hi " + orders.getUser().getFirstname() + "</strong>,<br/><br/>" +
+                    "Your order has been " + status.getStatus() + ". <br/><br/>" +
+                    "Thank you<br/>" +
+                    "<strong>MIU MiniMart</strong>";
+            try {
+                emailService.sendMail(orders.getUser().getUsername(), subject, body);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                logger.error("Error while sending email.");
+            }
+
             return new ResponseMessage("Updated order status.", HttpStatus.OK);
         }
         return new ResponseMessage("Order not found.", HttpStatus.NOT_FOUND);
@@ -159,8 +200,16 @@ public class OrderService implements IOrderService {
             Invoice invoice = invoiceOpt.get();
             invoice.setInvoiceStatus(status);
             invoiceRepository.save(invoice);
+
             return new ResponseMessage("Updated invoice status.", HttpStatus.OK);
         }
         return new ResponseMessage("Invoice not found.", HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public Map<String, Integer> countAllCompletedOrderOfUser(long userId) {
+        Map<String, Integer> count = new HashMap<>();
+        count.put("count", orderRepository.countAllByOrderStatusAndUserId(userId, COMPLETED.toString()));
+        return count;
     }
 }

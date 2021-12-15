@@ -4,13 +4,17 @@ import edu.miu.waa.minimartecommerce.domain.user.*;
 import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
 import edu.miu.waa.minimartecommerce.dto.user.*;
 import edu.miu.waa.minimartecommerce.repository.user.*;
+import edu.miu.waa.minimartecommerce.service.mail.IEmailService;
 import edu.miu.waa.minimartecommerce.service.user.IUserService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +25,8 @@ import static edu.miu.waa.minimartecommerce.constant.user.Role.SELLER;
 
 @Service
 public class UserService implements IUserService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final ModelMapper modelMapper;
@@ -28,8 +34,9 @@ public class UserService implements IUserService {
     private final IPaymentDetailRepository paymentDetailRepository;
     private final IFollowersRepository followersRepository;
     private final IBillingAddressRepository billingAddressRepository;
+    private final IEmailService emailService;
 
-    public UserService(IUserRepository userRepository, IRoleRepository roleRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, IPaymentDetailRepository paymentDetailRepository, IFollowersRepository followersRepository, IBillingAddressRepository billingAddressRepository){
+    public UserService(IUserRepository userRepository, IRoleRepository roleRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, IPaymentDetailRepository paymentDetailRepository, IFollowersRepository followersRepository, IBillingAddressRepository billingAddressRepository, IEmailService emailService){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
@@ -37,6 +44,7 @@ public class UserService implements IUserService {
         this.paymentDetailRepository = paymentDetailRepository;
         this.followersRepository = followersRepository;
         this.billingAddressRepository = billingAddressRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -72,6 +80,16 @@ public class UserService implements IUserService {
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             userRepository.save(user);
 
+            String subject = "User Registration";
+            String body = "<strong>Hi " + user.getFirstname() + "</strong>,<br/><br/>" +
+                    "Your new user account has been created. Thank you for joining the MIU MiniMart! <br/><br/>" +
+                    "Thank you<br/>" +
+                    "<strong>MIU MiniMart</strong>";
+            try {
+                emailService.sendMail(user.getUsername(), subject, body);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                logger.error("Error while sending email.");
+            }
             return new ResponseMessage("Saved Successfully.", HttpStatus.CREATED);
         }
         return new ResponseMessage(
@@ -120,6 +138,18 @@ public class UserService implements IUserService {
             User user = userOpt.get();
             user.setAdminApproved(true);
             userRepository.save(user);
+
+            String subject = "Seller Account Approved";
+            String body = "<strong>Hi " + user.getFirstname() + "</strong>,<br/><br/>" +
+                    "Congrats!! Your account has been approved as a seller. Thank you for joining the MIU MiniMart! <br/><br/>" +
+                    "Happy selling.<br/><br/>" +
+                    "<strong>MIU MiniMart</strong>";
+            try {
+                emailService.sendMail(user.getUsername(), subject, body);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                logger.error("Error while sending email.");
+            }
+
             return new ResponseMessage(String.format("%s %s has been approved to be seller", user.getFirstname(), user.getLastname()),
                     HttpStatus.OK);
         }

@@ -17,4 +17,11 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
             "INNER JOIN oi.product p " +
             "WHERE p.id=:id")
     int countAllByProductId(@Param(value = "id") long id);
+
+    @Query("SELECT count(ord) FROM Orders ord " +
+            "INNER JOIN ord.orderStatus st " +
+            "INNER JOIN ord.user us " +
+            "WHERE us.id=:userId AND st.status=:orderStatus")
+    int countAllByOrderStatusAndUserId(@Param(value="userId") long userId,
+                                       @Param(value="orderStatus") String status);
 }

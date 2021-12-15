@@ -5,6 +5,7 @@ import edu.miu.waa.minimartecommerce.dto.ResponseMessage;
 import edu.miu.waa.minimartecommerce.dto.order.OrderDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IOrderService {
@@ -21,4 +22,6 @@ public interface IOrderService {
     ResponseMessage updateOrderStatus(long id, String orderStatus);
 
     ResponseMessage updateInvoiceStatus(long invoiceId, String invoiceStatus);
+
+    Map<String, Integer> countAllCompletedOrderOfUser(long userId);
 }
