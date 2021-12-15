@@ -31,6 +31,8 @@ public interface IUserService {
     List<PaymentDetail> getAllPaymentDetails(long userId);
 
     /* ---------- Followers ------------ */
+    List<User> findAllSellers();
+
     ResponseMessage addFollowingUser(FollowersDto dto);
 
     ResponseMessage removeFollowingUser(long followersId);

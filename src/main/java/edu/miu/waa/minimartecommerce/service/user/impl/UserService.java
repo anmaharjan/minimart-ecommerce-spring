@@ -145,6 +145,11 @@ public class UserService implements IUserService {
         return paymentDetailRepository.findAllByUser_Id(userId);
     }
 
+    @Override
+    public List<User> findAllSellers() {
+        return userRepository.findAllByRoles(SELLER.toString());
+    }
+
     /* ---------- Followers ------------ */
     @Override
     public ResponseMessage addFollowingUser(FollowersDto dto) {

@@ -23,10 +23,16 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping(consumes = {"multipart/form-data"})
+    /*@PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseMessage> save(@RequestPart("images") MultipartFile[] images,
                                                 @RequestPart("product")ProductRequestDto product){
         ResponseMessage response = productService.save(images, product);
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }*/
+
+    @PostMapping
+    public ResponseEntity<ResponseMessage> save(@RequestBody ProductRequestDto product){
+        ResponseMessage response = productService.save(null, product);
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 

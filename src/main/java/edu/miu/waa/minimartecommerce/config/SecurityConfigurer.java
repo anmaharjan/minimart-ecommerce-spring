@@ -57,10 +57,11 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/order/checkout").hasAuthority("BUYER")
 
                 // Product APIs
+                .antMatchers(HttpMethod.GET, "/product/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/product").hasAuthority("SELLER")
+//                .antMatchers( "/product/save").hasAuthority("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{id}").hasAuthority("SELLER")
                 .antMatchers(HttpMethod.PUT, "/product").hasAuthority("SELLER")
-                .antMatchers(HttpMethod.GET, "/product/**").permitAll()
 
                 // Cart APIs
                 .antMatchers("/cart/**").hasAuthority("BUYER")

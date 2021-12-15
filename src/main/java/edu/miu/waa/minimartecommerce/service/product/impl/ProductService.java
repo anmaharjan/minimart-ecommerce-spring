@@ -64,7 +64,19 @@ public class ProductService implements IProductService {
                 imageFolder.mkdirs();
 
             List<ProductImages> productImages = new ArrayList<>();
-            boolean success = saveImages(productImages, images, folderLocation, folderRelativeLocation);
+            boolean success;
+            if(images != null){
+                success = saveImages(productImages, images, folderLocation, folderRelativeLocation);
+            }
+            else{
+                success=true;
+                productImages.add(
+                        new ProductImages("Dummy",
+                                "jpg",
+                                "/home/aniz/Desktop/miu materials/academic/WAA/practical/mini-mart-ecommerce/images/products/Dummy.jpg",
+                                "/images/products/Dummy.jpg")
+                );
+            }
 
             if(success){
                 product.setProductImages(productImages);

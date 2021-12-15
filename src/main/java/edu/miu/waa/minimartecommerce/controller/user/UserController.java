@@ -89,6 +89,12 @@ public class UserController {
     }
 
     /* ---- Followers ---- */
+    @JsonView(View.UserListView.class)
+    @GetMapping("/get-all/sellers")
+    public ResponseEntity<List<User>> getAllSellers(){
+        return ResponseEntity.ok(userService.findAllSellers());
+    }
+
     @PostMapping("/following")
     public ResponseEntity<ResponseMessage> addFollowingUser(@RequestBody FollowersDto dto){
         ResponseMessage response = userService.addFollowingUser(dto);
