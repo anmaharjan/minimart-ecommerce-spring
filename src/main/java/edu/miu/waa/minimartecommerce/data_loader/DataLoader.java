@@ -1,3 +1,4 @@
+/*
 package edu.miu.waa.minimartecommerce.data_loader;
 
 import edu.miu.waa.minimartecommerce.domain.order.InvoiceStatus;
@@ -95,3 +96,4 @@ public class DataLoader implements ApplicationRunner {
         }
     }
 }
+*/
